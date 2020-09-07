@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-feed-api
+  labels:
+    app: udagram-feed-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udagram-feed-api
+  template:
+    metadata:
+      labels:
+        app: udagram-feed-api
+    spec:
+      containers:
+      - name: udagram-feed-api
+        image: pinmaing/udagram-feed-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POSTGRES_USERNAME
+          value: "POSTGRES_USERNAME"
+        - name: POSTGRES_PASSWORD
+          value: "POSTGRES_PASSWORD"
+        - name: POSTGRES_HOST
+          value: "POSTGRES_HOST"
+        - name: POSTGRES_DB
+          value: "POSTGRES_DB"
+        - name: AWS_BUCKET
+          value: "AWS_BUCKET"
+        - name: AWS_REGION
+          value: "AWS_REGION"
+        - name: AWS_PROFILE
+          value: "AWS_PROFILE"
+        - name: JWT_SECRET
+          value: "JWT_SECRET"
+        - name: URL
+          value: "URL"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
