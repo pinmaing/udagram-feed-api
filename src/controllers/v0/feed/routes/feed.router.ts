@@ -4,6 +4,7 @@ import {NextFunction} from 'connect';
 import * as jwt from 'jsonwebtoken';
 import * as AWS from '../../../../aws';
 import * as c from '../../../../config/config';
+import { v4 as uuid } from 'uuid'
 
 const router: Router = Router();
 
@@ -28,20 +29,26 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 // Get all feed items
 router.get('/', async (req: Request, res: Response) => {
+  let pid = uuid();
+  console.log(new Date().toLocaleString() + `: ${pid} - User requested for Feed Get URL(/)`);
   const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
   items.rows.map((item) => {
     if (item.url) {
       item.url = AWS.getGetSignedUrl(item.url);
     }
   });
+  console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for getting all Feed items`);
   res.send(items);
 });
 
 // Get a feed resource
 router.get('/:id',
     async (req: Request, res: Response) => {
+      let pid = uuid();
       const {id} = req.params;
+      console.log(new Date().toLocaleString() + `: ${pid} - User requested to get Feed ID : ${id}`);
       const item = await FeedItem.findByPk(id);
+      console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for getting Feed ID : ${id}`);
       res.send(item);
     });
 
@@ -50,7 +57,10 @@ router.get('/signed-url/:fileName',
     requireAuth,
     async (req: Request, res: Response) => {
       const {fileName} = req.params;
+      let pid = uuid();
+      console.log(new Date().toLocaleString() + `: ${pid} - User requested to get Feed Item Signed-URL : ${fileName}`);
       const url = AWS.getPutSignedUrl(fileName);
+      console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for getting Feed Item Signed-URL : ${fileName}`);
       res.status(201).send({url: url});
     });
 
@@ -60,7 +70,8 @@ router.post('/',
     async (req: Request, res: Response) => {
       const caption = req.body.caption;
       const fileName = req.body.url; // same as S3 key name
-
+      let pid = uuid();
+      console.log(new Date().toLocaleString() + `: ${pid} - User requested to post Feed Item : ${caption}`);
       if (!caption) {
         return res.status(400).send({message: 'Caption is required or malformed.'});
       }
@@ -77,6 +88,7 @@ router.post('/',
       const savedItem = await item.save();
 
       savedItem.url = AWS.getGetSignedUrl(savedItem.url);
+      console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for posting Feed Item : ${caption}`);
       res.status(201).send(savedItem);
     });
 

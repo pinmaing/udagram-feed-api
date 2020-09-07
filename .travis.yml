@@ -16,7 +16,7 @@ before_script:
 script:
   - docker --version # print the version for logging
   - docker build -t udagram-feed-api .
-  - docker tag simple-node pinmaing/udagram-feed-api:latest
+  - docker tag udagram-feed-api pinmaing/udagram-feed-api:latest
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
