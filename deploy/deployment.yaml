@@ -21,26 +21,53 @@ spec:
         - containerPort: 8080
         env:
         - name: POSTGRES_USERNAME
-          value: "POSTGRES_USERNAME"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: POSTGRES_USERNAME
         - name: POSTGRES_PASSWORD
-          value: "POSTGRES_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: POSTGRES_PASSWORD
         - name: POSTGRES_HOST
-          value: "POSTGRES_HOST"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: POSTGRES_HOST
         - name: POSTGRES_DB
-          value: "POSTGRES_DB"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: POSTGRES_DB
         - name: AWS_BUCKET
-          value: "AWS_BUCKET"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: AWS_BUCKET
         - name: AWS_REGION
-          value: "AWS_REGION"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: AWS_REGION
         - name: AWS_PROFILE
-          value: "AWS_PROFILE"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: AWS_PROFILE
         - name: JWT_SECRET
-          value: "JWT_SECRET"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: JWT_SECRET
         - name: URL
-          value: "URL"
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: URL     
         livenessProbe:
           httpGet:
-            path: /health
+            path: /
             port: 8080
           initialDelaySeconds: 3
-          periodSeconds: 3
+          periodSeconds: 3        
