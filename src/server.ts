@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express from 'express';
-import { v4 as uuid } from 'uuid'
 import {sequelize} from './sequelize';
 
 import {IndexRouter} from './controllers/v0/index.router';
@@ -33,8 +32,6 @@ import {V0_FEED_MODELS} from './controllers/v0/model.index';
 
   // Root URI call
   app.get( '/', async ( req, res ) => {
-    let pid = uuid();
-    console.log(new Date().toLocaleString() + `: ${pid} - User requested for Root URL(/)`);
     res.send( '/api/v0/' );
   } );
 

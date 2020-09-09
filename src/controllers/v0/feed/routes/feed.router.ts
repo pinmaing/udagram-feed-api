@@ -30,7 +30,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 // Get all feed items
 router.get('/', async (req: Request, res: Response) => {
   let pid = uuid();
-  console.log(new Date().toLocaleString() + `: ${pid} - User requested for Feed Get URL(/)`);
+  console.log(new Date().toLocaleString() + `: ${pid} - User requested for Feed Get URL(api/v0/feed/)`);
   const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
   items.rows.map((item) => {
     if (item.url) {
@@ -73,10 +73,12 @@ router.post('/',
       let pid = uuid();
       console.log(new Date().toLocaleString() + `: ${pid} - User requested to post Feed Item : ${caption}`);
       if (!caption) {
+        console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for posting Feed Item with error : ${caption}`);
         return res.status(400).send({message: 'Caption is required or malformed.'});
       }
 
       if (!fileName) {
+        console.log(new Date().toLocaleString() + `: ${pid} - Finished processing request for posting Feed Item with error : ${fileName}`);
         return res.status(400).send({message: 'File url is required.'});
       }
 
